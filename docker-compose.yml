@@ -1,0 +1,28 @@
+services:
+
+  mongo:
+    container_name: db
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: quiz123
+      MONGO_INITDB_ROOT_PASSWORD: quiz123
+    volumes:
+      - mongo_volume:/data/db
+
+  mongo-express:
+    container_name: mongo_express
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: quiz123
+      ME_CONFIG_MONGODB_ADMINPASSWORD: quiz123
+      ME_CONFIG_MONGODB_URL: mongodb://quiz123:quiz123@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+  
+
+
+volumes:
+  mongo_volume:
