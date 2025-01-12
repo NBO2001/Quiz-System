@@ -9,6 +9,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: quiz123
     volumes:
       - mongo_volume:/data/db
+    networks:
+      - mongonet
 
   mongo-express:
     container_name: mongo_express
@@ -21,8 +23,13 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: quiz123
       ME_CONFIG_MONGODB_URL: mongodb://quiz123:quiz123@mongo:27017/
       ME_CONFIG_BASICAUTH: false
+    networks:
+      - mongonet
   
 
 
 volumes:
   mongo_volume:
+
+networks:
+  mongonet:

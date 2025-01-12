@@ -4,8 +4,8 @@
 # ~~~~
 
 
-GET     /questions               com.nbo.controllers.QuizController.getAll
-GET     /questions/:id           com.nbo.controllers.QuizController.getById(id: Int)
-POST    /questions               com.nbo.controllers.QuizController.create
-PUT     /questions/:id           com.nbo.controllers.QuizController.update(id: Int)
-DELETE  /questions/:id           com.nbo.controllers.QuizController.delete(id: Int)
+GET     /questions                          com.nbo.controllers.QuizController.getAll
+GET     /questions/:question_id             com.nbo.controllers.QuizController.getById(question_id: String, answered: Boolean)
+POST    /questions/check_answer/:question_id             com.nbo.controllers.QuizController.checkAnswer(question_id: String)
+POST    /questions                          com.nbo.controllers.QuizController.create
+DELETE  /questions/:question_id                      com.nbo.controllers.QuizController.delete(question_id: String)
