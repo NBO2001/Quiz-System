@@ -1,5 +1,6 @@
 import re
 
+from question_extrator.types import OptionType, QuestionType
 
 DISCIPLINES = [
     'LÍNGUA PORTUGUESA',
@@ -16,9 +17,10 @@ DISCIPLINES = [
 class ParserQuestion:
     def __init__(self, content: str):
         if type(content) is not str:
-            raise ValueError("content not is str type")
-        
-        self.questions = []
+            raise ValueError('content not is str type')
+
+        self.questions: list[QuestionType] = []
+        self.__questions = []
         self.content = [
             word.strip()
             for word in content.split('\n')
@@ -30,6 +32,16 @@ class ParserQuestion:
 
     def is_option(self, text: str) -> bool:
         return re.match(r'^[a-e]\)', text) != None
+
+    def __convert_question__(self, question: dict) -> QuestionType:
+        options = []
+        for option in question['options']:
+            options.append(OptionType(option=option))
+        return QuestionType.from_raw(
+            raw_statement=question['statement'],
+            options=options,
+            discipline=question['discipline'],
+        )
 
     def parser(
         self,
@@ -45,22 +57,25 @@ class ParserQuestion:
                 option_finding = False
 
                 question = {
-                    'question': line,
+                    'statement': line,
                     'options': [],
                     'discipline': discipline.lower(),
                 }
 
-                self.questions.append(question)
+                self.__questions.append(question)
             elif self.is_option(line):
                 question_started = False
                 option_finding = True
-                self.questions[-1]['options'].append(line)
+                self.__questions[-1]['options'].append(line)
             elif question_started:
-                self.questions[-1]['question'] += ' ' + line
+                self.__questions[-1]['statement'] += ' ' + line
             elif option_finding:
-                self.questions[-1]['options'][-1] += ' ' + line
+                self.__questions[-1]['options'][-1] += ' ' + line
+
+        for question in self.__questions:
+            self.questions.append(self.__convert_question__(question))
 
     def get_questions(
         self,
-    ):
+    ) -> list[QuestionType]:
         return self.questions
