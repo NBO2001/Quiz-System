@@ -13,3 +13,9 @@ target
 /.settings
 /RUNNING_PID
 .env
+
+parser_pdf
+
+.vscode
+htmlcov
+.coverage
