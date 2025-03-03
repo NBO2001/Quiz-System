@@ -1,3 +1,8 @@
+# Quiz System - Backend
+
+## Introduction
+
+Responsible for registering users, questions, and correct answers.
 
 ### How to contribute
 
