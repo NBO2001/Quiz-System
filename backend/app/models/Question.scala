@@ -14,5 +14,6 @@ object Question {
 }
 
 object QuestionDto {
-  implicit val questionListDtojson: OFormat[QuestionDto] = Json.format[QuestionDto]
+  implicit val questionListDtojson: OFormat[QuestionDto] =
+    Json.format[QuestionDto]
 }
