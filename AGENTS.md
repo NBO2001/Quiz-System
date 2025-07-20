@@ -18,8 +18,8 @@ Agents working in the Scala `backend` project must:
 ## Question Extractor
 Agents working in the Python `question_extractor` project (directory
 `question_extrator`) must:
-- Format the code with `isort` and `blue`.
-- Execute tests with `pytest` (usually via `poetry run pytest`).
+- Format the code with`make format`.
+- Execute tests with `make test`.
 - Review `question_extrator/README.md` for project details.
 
 ## Contributing Agents
