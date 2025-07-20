@@ -1,6 +1,6 @@
 import re
 
-PATTERN_AWSER = re.compile(r'(\d{1,2})\. ([A-E])[\s|\n]')
+PATTERN_AWSER = re.compile(r"(\d{1,2})\. ([A-E])[\s|\n]")
 
 
 class ParserCorrectlyOptions:

@@ -13,9 +13,10 @@ pydantic = "^2.10.6"
 [tool.poetry.group.dev.dependencies]
 pytest-mock = "^3.14.0"
 pytest = "^8.3.4"
-blue = "^0.9.1"
+black = "^25.1.0"
 isort = "^5.13.2"
 pytest-cov = "^6.0.0"
+flake8 = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -25,8 +26,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 pythonpath = "."
 addopts = "--doctest-modules -x --cov=question_extrator -vv"
-
-
-[tool.isort]
-profile = "black"
-line_length = 79
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]

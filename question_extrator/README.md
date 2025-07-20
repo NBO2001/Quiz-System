@@ -17,13 +17,19 @@ All data models are Pydantic models located in `question_extrator/types`.
 
 ## Running the tests
 
-The test suite is written with `pytest`.  From the `question_extrator`
-folder run:
-
 ```bash
-pytest
+make test
 ```
 
-`pytest-cov` is listed as a development dependency so coverage information
-is generated when the plugin is available.
+## Running the linter
+  
+```bash
+make lint
+```
+## Running the formatter
+
+```bash
+make format
+```
+
 
