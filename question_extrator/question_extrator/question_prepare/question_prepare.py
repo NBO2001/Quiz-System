@@ -3,7 +3,7 @@ from typing import Optional
 
 from question_extrator.parser_correcly_options import ParserCorrectlyOptions
 from question_extrator.parser_question import ParserQuestion
-from question_extrator.types import OptionType, QuestionType
+from question_extrator.types import QuestionType
 
 
 class QuestionPrepare:
@@ -37,15 +37,10 @@ class QuestionPrepare:
 
                     for option in question.options:
                         splited_option = [
-                            x
-                            for x in re.split(r'(^[a-e])\)', option.option, 1)
-                            if x
+                            x for x in re.split(r"(^[a-e])\)", option.option, 1) if x
                         ]
 
-                        if (
-                            len(splited_option) == 2
-                            and splited_option[0] == op_correct
-                        ):
+                        if len(splited_option) == 2 and splited_option[0] == op_correct:
                             option.option = splited_option[1].strip()
                             option.is_correct = True
                         elif len(splited_option) == 2:
