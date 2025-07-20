@@ -1,6 +1,5 @@
 package com.nbo.test.controllers
 
-import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -28,16 +27,16 @@ class FakeQuestionRepository()(implicit ec: ExecutionContext) extends QuestionRe
 
   override def getAllQuestions(): Future[Seq[Question]] = Future.successful(Seq(sampleQuestion))
 
-  override def getQuestion(question_id: String): Future[Option[Question]] =
-    Future.successful(if (question_id == sampleQuestion.id) Some(sampleQuestion) else None)
+  override def getQuestion(questionId: String): Future[Option[Question]] =
+    Future.successful(if (questionId == sampleQuestion.id) Some(sampleQuestion) else None)
 
-  override def checkAnswer(question_id: String, answer: String): Future[Boolean] =
-    Future.successful(question_id == sampleQuestion.id && answer == "2")
+  override def checkAnswer(questionId: String, answer: String): Future[Boolean] =
+    Future.successful(questionId == sampleQuestion.id && answer == "2")
 
   override def insertQuestion(question: QuestionDto): Future[Question] =
     Future.successful(Question("2", question.content, question.options))
 
-  override def deleteQuestion(question_id: String): Future[Boolean] = Future.successful(true)
+  override def deleteQuestion(questionId: String): Future[Boolean] = Future.successful(true)
 
   override def close(): Unit = ()
 }
@@ -71,21 +70,32 @@ class QuizControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "QuizController#checkAnswer" should {
     "return true for correct answers" in {
-      val request = FakeRequest(POST, "/questions/check_answer/1").withJsonBody(Json.toJson(OptionDto("2")))
+      val body = Json.obj("text" -> "2")
+      val request = FakeRequest(POST, "/questions/check_answer/1")
+        .withHeaders(CONTENT_TYPE -> "application/json")
+        .withBody(body)
       val result = controller.checkAnswer("1").apply(request)
       status(result) mustBe OK
       (contentAsJson(result) \ "isCorrect").as[Boolean] mustBe true
     }
 
     "return false for incorrect answers" in {
-      val request = FakeRequest(POST, "/questions/check_answer/1").withJsonBody(Json.toJson(OptionDto("3")))
+      val body = Json.obj("text" -> "3")
+      val request =
+        FakeRequest(POST, "/questions/check_answer/1")
+          .withHeaders(CONTENT_TYPE -> "application/json")
+          .withBody(body)
       val result = controller.checkAnswer("1").apply(request)
       status(result) mustBe OK
       (contentAsJson(result) \ "isCorrect").as[Boolean] mustBe false
     }
 
     "return BadRequest for invalid JSON" in {
-      val request = FakeRequest(POST, "/questions/check_answer/1").withJsonBody(Json.obj("invalid" -> "data"))
+      val body = Json.obj("invalid" -> "data")
+      val request =
+        FakeRequest(POST, "/questions/check_answer/1")
+          .withHeaders(CONTENT_TYPE -> "application/json")
+          .withBody(body)
       val result = controller.checkAnswer("1").apply(request)
       status(result) mustBe BAD_REQUEST
     }
@@ -94,7 +104,11 @@ class QuizControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
   "QuizController#create" should {
     "create a new question and return Created" in {
       val newQuestion = QuestionDto("What is 2 + 2?", List(QuestionOption("3", Some(false)), QuestionOption("4", Some(true))))
-      val request = FakeRequest(POST, "/questions").withJsonBody(Json.toJson(newQuestion))
+      val body = Json.toJson(newQuestion)
+      val request =
+        FakeRequest(POST, "/questions")
+          .withHeaders(CONTENT_TYPE -> "application/json")
+          .withBody(body)
       val result = controller.create().apply(request)
       status(result) mustBe CREATED
       val createdQuestion = contentAsJson(result).as[Question]
@@ -102,7 +116,10 @@ class QuizControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "return BadRequest for invalid JSON" in {
-      val request = FakeRequest(POST, "/questions").withJsonBody(Json.obj("invalid" -> "data"))
+      val request =
+        FakeRequest(POST, "/questions")
+          .withHeaders(CONTENT_TYPE -> "application/json")
+          .withJsonBody(Json.obj("invalid" -> "data"))
       val result = controller.create().apply(request)
       status(result) mustBe BAD_REQUEST
     }
